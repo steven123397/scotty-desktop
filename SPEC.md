@@ -268,10 +268,10 @@ docs/ideas/ · docs/adr/   按项目约定，首次产出时创建
 
 ## Open Questions
 
-目前没有阻塞规格的未决问题。剩余两项是**实现期风险**，在 plan 里各自对应一个 spike/验证任务，
-失败时按上表回退：
+目前没有未决问题。两项实现期风险已于 2026-11-04 验证通过：
 
-1. **未签名自动更新**：Windows SmartScreen 与 electron-updater 的签名校验是否放行；
-   失败回退为“检查更新 + 打开下载页”。
-2. **publish/showcase**：Eleventy 依赖树在打包后的路径解析是否如预期；
-   失败则改为不随包，并在 UI 记录已知限制。
+1. **未签名自动更新**：0.1.0 → 0.1.1 的检测、下载、静默安装与重启在未签名构建上通过；
+   证据与风险见 `docs/adr/0001-unsigned-auto-update.md`。
+2. **publish/showcase**：打包产物中的服务端成功为 `nexuskit-audit-sandbox` 生成站点
+   （9 条 bead，`index.html` 约 56 KB）；Eleventy 路径写入构建日志
+   （`build/server/node_modules/@11ty/eleventy/cmd.cjs`）。

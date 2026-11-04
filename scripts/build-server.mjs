@@ -135,6 +135,7 @@ async function assemble(upstreamDir, outDir, config, logStream) {
   if (!existsSync(eleventyBin)) {
     throw new Error(`@11ty/eleventy/cmd.cjs missing after merge: ${eleventyBin}`);
   }
+  logStream.write(`eleventy: ${eleventyBin}\n`);
 
   if (!existsSync(path.join(outDir, "server.js"))) {
     throw new Error(`server.js missing after assembly in ${outDir}`);
