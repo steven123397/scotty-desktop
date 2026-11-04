@@ -13,6 +13,19 @@ const page = `<!doctype html>
   <body>
     <h1 id="fixture">fake scotty server</h1>
     <a id="external" href="https://example.com/">external</a>
+    <button id="copy">copy</button>
+    <span id="copy-result"></span>
+    <script>
+      document.getElementById("copy").addEventListener("click", async () => {
+        const result = document.getElementById("copy-result");
+        try {
+          await navigator.clipboard.writeText("bza-test");
+          result.textContent = "copied";
+        } catch (error) {
+          result.textContent = "failed: " + error.name + ": " + error.message;
+        }
+      });
+    </script>
   </body>
 </html>
 `;

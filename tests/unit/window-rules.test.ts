@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { isAllowedUrl, isExternalHttpUrl, readSkinCss } from "../../src/main/window-rules";
+import { isAllowedPermission, isAllowedUrl, isExternalHttpUrl, readSkinCss } from "../../src/main/window-rules";
 
 const tempDirs: string[] = [];
 
@@ -18,6 +18,19 @@ afterEach(() => {
   for (const dir of tempDirs.splice(0)) {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+describe("isAllowedPermission", () => {
+  it("allows clipboard access", () => {
+    expect(isAllowedPermission("clipboard-read")).toBe(true);
+    expect(isAllowedPermission("clipboard-sanitized-write")).toBe(true);
+  });
+
+  it("denies everything else", () => {
+    expect(isAllowedPermission("notifications")).toBe(false);
+    expect(isAllowedPermission("media")).toBe(false);
+    expect(isAllowedPermission("geolocation")).toBe(false);
+  });
 });
 
 describe("isAllowedUrl", () => {

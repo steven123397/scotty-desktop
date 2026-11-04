@@ -99,6 +99,25 @@ test("exits a second instance instead of starting another server", async () => {
   }
 });
 
+test("allows clipboard writes from the loaded page", async () => {
+  const userData = createUserData();
+  const app = await launch(userData);
+  try {
+    const previous = await app.evaluate(({ clipboard }) => clipboard.readText());
+    const page = await app.firstWindow();
+    await expect(page.locator("#fixture")).toBeVisible();
+
+    await page.click("#copy");
+    await expect(page.locator("#copy-result")).toHaveText("copied");
+    expect(await app.evaluate(({ clipboard }) => clipboard.readText())).toBe("bza-test");
+
+    await app.evaluate(({ clipboard }, text) => clipboard.writeText(text), previous);
+  } finally {
+    await app.close();
+    rmSync(userData, { recursive: true, force: true });
+  }
+});
+
 test("injects skin.css when it has content", async () => {
   const userData = createUserData();
   const skinDir = mkdtempSync(path.join(os.tmpdir(), "scotty-skin-"));

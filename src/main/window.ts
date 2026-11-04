@@ -1,6 +1,6 @@
 import { BrowserWindow, shell } from "electron";
 
-import { isAllowedUrl, isExternalHttpUrl, readSkinCss } from "./window-rules";
+import { isAllowedPermission, isAllowedUrl, isExternalHttpUrl, readSkinCss } from "./window-rules";
 
 export interface MainWindowOptions {
   skinCssFile: string;
@@ -24,9 +24,12 @@ export function createMainWindow(port: number, options: MainWindowOptions): Brow
 
   const origin = `http://127.0.0.1:${port}`;
 
-  window.webContents.session.setPermissionRequestHandler((_contents, _permission, callback) => {
-    callback(false);
+  window.webContents.session.setPermissionRequestHandler((_contents, permission, callback) => {
+    callback(isAllowedPermission(permission));
   });
+  window.webContents.session.setPermissionCheckHandler((_contents, permission) =>
+    isAllowedPermission(permission),
+  );
 
   window.webContents.on("will-navigate", (event, url) => {
     if (isAllowedUrl(url, port)) {

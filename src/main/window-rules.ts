@@ -1,5 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 
+const ALLOWED_PERMISSIONS = ["clipboard-read", "clipboard-sanitized-write"];
+
+/** Only clipboard access is granted; everything else is denied. */
+export function isAllowedPermission(permission: string): boolean {
+  return ALLOWED_PERMISSIONS.includes(permission);
+}
+
 /** True when the url points at the local Scotty server origin. */
 export function isAllowedUrl(url: string, port: number): boolean {
   const parsed = parseUrl(url);

@@ -148,7 +148,7 @@ docs/ideas/ · docs/adr/   按项目约定，首次产出时创建
 
 - 只允许窗口停留在 `http://127.0.0.1:<port>`；其他 `http/https` 交给 `shell.openExternal`，
   `will-navigate` 与 `setWindowOpenHandler` 都拦截。
-- 拒绝所有权限请求（通知、摄像头、麦克风、地理位置等）。
+- 拒绝通知、摄像头、麦克风、地理位置等权限；只放行剪贴板读写（编号点击复制需要）。
 - 服务端只监听回环地址，不加额外鉴权；威胁模型与现在本机跑 `next start` 一致。
   这要求不把端口暴露到局域网，也不允许 `HOSTNAME=0.0.0.0`。
 
