@@ -1,0 +1,43 @@
+appId: com.steven123397.scotty-desktop
+productName: Scotty Desktop
+directories:
+  output: release
+  buildResources: build-assets
+files:
+  - dist-electron/**/*
+  - package.json
+extraResources:
+  # Copy through build/ so server/node_modules is not treated as the root
+  # node_modules, which electron-builder's file filter always drops.
+  - from: build
+    to: .
+    filter:
+      - server/**/*
+  - from: assets/skin.css
+    to: skin.css
+  - from: NOTICE
+    to: NOTICE
+  - from: LICENSE
+    to: LICENSE
+  - from: licenses
+    to: licenses
+asar: true
+win:
+  icon: build-assets/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${name}-Setup-${version}.${ext}
+nsis:
+  oneClick: true
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Scotty Desktop
+publish:
+  provider: github
+  owner: steven123397
+  repo: scotty-desktop

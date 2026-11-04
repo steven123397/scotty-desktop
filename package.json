@@ -18,7 +18,7 @@
     "icon": "node scripts/generate-icon.mjs",
     "dev": "npm run build:main && electron .",
     "dev:attach": "electron . --attach",
-    "dist": "npm run build:main && electron-builder",
+    "dist": "npm run build:main && electron-builder --publish never",
     "release": "npm run build:main && electron-builder --publish always",
     "test": "vitest run",
     "test:e2e": "npm run build:main && playwright test",
