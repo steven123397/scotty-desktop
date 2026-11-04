@@ -1,11 +1,12 @@
 import { app, dialog, type BrowserWindow } from "electron";
+import { autoUpdater } from "electron-updater";
 import path from "node:path";
 
 import { createLogger, type Logger } from "./log";
 import { pickPort } from "./net";
 import { resolveBd } from "./paths";
 import { startServer, type ServerExit, type ServerHandle } from "./server";
-import { startSpikeUpdater } from "./updater";
+import { startUpdater } from "./updater";
 import { createMainWindow } from "./window";
 
 const MAX_RESTARTS = 3;
@@ -78,9 +79,7 @@ async function bootstrap(): Promise<void> {
     mainWindow = null;
   });
 
-  if (process.env.SCOTTY_UPDATE_SPIKE === "1") {
-    startSpikeUpdater({ logger, feedUrl: process.env.SCOTTY_UPDATE_FEED });
-  }
+  startUpdater({ isPackaged: app.isPackaged, logger, updater: autoUpdater, dialog });
 }
 
 async function startAndWatch(): Promise<void> {
