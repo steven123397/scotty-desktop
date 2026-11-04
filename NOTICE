@@ -12,3 +12,4 @@ Full license text:   licenses/bead-me-up-scotty.LICENSE
 
 Application icons are derived from the upstream resources app/icon.svg and
 app/favicon.ico and are distributed under the same MIT license.
+build-assets/icon.ico is generated from app/icon.svg by scripts/generate-icon.mjs.
