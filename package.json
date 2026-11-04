@@ -13,6 +13,7 @@
   "scripts": {
     "upstream:fetch": "node scripts/fetch-upstream.mjs",
     "build:server": "node scripts/build-server.mjs",
+    "verify:server": "node scripts/verify-server.mjs",
     "build:main": "node scripts/build-main.mjs",
     "dev": "npm run build:main && electron .",
     "dev:attach": "electron . --attach",
@@ -23,7 +24,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "verify": "npm run typecheck && npm run lint && npm test && npm run build:server && node scripts/verify-server.mjs"
+    "verify": "npm run typecheck && npm run lint && npm test && npm run build:server && npm run verify:server"
   },
   "dependencies": {
     "electron-updater": "^6.8.11"
