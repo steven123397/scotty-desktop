@@ -1,0 +1,14 @@
+scotty-desktop
+Copyright (c) 2026 Steven Liang
+
+This application bundles bead-me-up-scotty v0.4.0 without source
+modifications, distributed under the MIT license.
+
+Upstream repository: https://github.com/brendan-appstart/bead-me-up-scotty
+Upstream tag:        v0.4.0
+Upstream commit:     cf6dda198db15a77399d1d9e77292618a7d08fa1
+Upstream copyright:  Copyright (c) 2026 Brendan
+Full license text:   licenses/bead-me-up-scotty.LICENSE
+
+Application icons are derived from the upstream resources app/icon.svg and
+app/favicon.ico and are distributed under the same MIT license.
