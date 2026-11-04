@@ -31,6 +31,11 @@ server.listen(port, host, () => {
   console.log(`fake-server listening on http://${host}:${server.address().port}/`);
 });
 
+const exitAfterMs = Number(process.env.FAKE_EXIT_AFTER_MS ?? "0");
+if (exitAfterMs > 0) {
+  setTimeout(() => process.exit(1), exitAfterMs);
+}
+
 for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => server.close(() => process.exit(0)));
 }

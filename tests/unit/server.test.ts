@@ -104,6 +104,25 @@ describe("startServer", () => {
     await expectPortFree(port);
   });
 
+  it("reports an unexpected child exit through the exited promise", async () => {
+    const logger = createLogger(path.join(tempDir(), "server.log"));
+    const port = await pickPort();
+
+    const handle = await startServer({
+      serverPath: FAKE_SERVER,
+      port,
+      bdPath: null,
+      logger,
+      readyTimeoutMs: 10_000,
+      baseEnv: { ...process.env, FAKE_EXIT_AFTER_MS: "1500" },
+    });
+
+    const exit = await handle.exited;
+
+    expect(exit.code).toBe(1);
+    expect(exit.signal).toBeNull();
+  });
+
   it("fails with a diagnostic message pointing at the log when never ready", async () => {
     const logger = createLogger(path.join(tempDir(), "server.log"));
     const port = await pickPort();

@@ -14,9 +14,15 @@ export interface StartServerOptions {
   baseEnv?: NodeJS.ProcessEnv;
 }
 
+export interface ServerExit {
+  code: number | null;
+  signal: NodeJS.Signals | null;
+}
+
 export interface ServerHandle {
   readonly port: number;
   readonly url: string;
+  readonly exited: Promise<ServerExit>;
   stop(): Promise<void>;
 }
 
@@ -46,6 +52,9 @@ export async function startServer(options: StartServerOptions): Promise<ServerHa
   });
 
   let failure: Error | null = null;
+  const exited = new Promise<ServerExit>((resolve) => {
+    child.once("exit", (code, signal) => resolve({ code, signal }));
+  });
   child.once("error", (error) => {
     failure = error instanceof Error ? error : new Error(String(error));
     options.logger.error(`server failed to spawn: ${failure.message}`);
@@ -76,6 +85,7 @@ export async function startServer(options: StartServerOptions): Promise<ServerHa
   return {
     port: options.port,
     url,
+    exited,
     stop: () => stopChild(child, options.logger),
   };
 }

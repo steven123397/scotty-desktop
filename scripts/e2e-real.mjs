@@ -1,5 +1,6 @@
 /* global document */
 
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -50,6 +51,33 @@ async function waitForLauncher(page) {
   });
 }
 
+function leftoverServerProcesses() {
+  if (process.platform !== "win32") {
+    return 0;
+  }
+  const script =
+    `Get-CimInstance Win32_Process -Filter "Name='electron.exe'" | ` +
+    `Where-Object { $_.CommandLine -like '*${SERVER}*' } | ` +
+    `Measure-Object | Select-Object -ExpandProperty Count`;
+  const result = spawnSync("powershell.exe", ["-NoProfile", "-Command", script], {
+    encoding: "utf8",
+  });
+  return Number(result.stdout.trim() || "0");
+}
+
+async function expectNoServerProcesses() {
+  const deadline = Date.now() + 5000;
+  let count = leftoverServerProcesses();
+  while (count !== 0 && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    count = leftoverServerProcesses();
+  }
+  if (count !== 0) {
+    throw new Error(`${count} server process(es) still running after quit`);
+  }
+  console.log("no server processes after quit");
+}
+
 async function phaseRealScotty() {
   const names = projectNames();
   console.log(`config: ${CONFIG}`);
@@ -78,6 +106,7 @@ async function phaseRealScotty() {
   } finally {
     await app.close();
   }
+  await expectNoServerProcesses();
 }
 
 async function phaseWithoutBd() {

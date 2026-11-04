@@ -23,23 +23,34 @@ function launchEnv(extra: Record<string, string> = {}): Record<string, string> {
   return { ...env, SCOTTY_SERVER_PATH: FAKE_SERVER, SCOTTY_NO_EXTERNAL_OPEN: "1", ...extra };
 }
 
-async function launch(): Promise<ElectronApplication> {
-  return electron.launch({ args: [root], env: launchEnv() });
+function createUserData(): string {
+  return mkdtempSync(path.join(os.tmpdir(), "scotty-e2e-"));
+}
+
+function launchArgs(userData: string): string[] {
+  return [`--user-data-dir=${userData}`, root];
+}
+
+async function launch(userData: string): Promise<ElectronApplication> {
+  return electron.launch({ args: launchArgs(userData), env: launchEnv() });
 }
 
 test("shows the fixture page in the window", async () => {
-  const app = await launch();
+  const userData = createUserData();
+  const app = await launch(userData);
   try {
     const page = await app.firstWindow();
     await expect(page.locator("#fixture")).toHaveText("fake scotty server");
     expect(await page.title()).toBe("Fake Scotty");
   } finally {
     await app.close();
+    rmSync(userData, { recursive: true, force: true });
   }
 });
 
 test("keeps the window on the local origin when an external link is clicked", async () => {
-  const app = await launch();
+  const userData = createUserData();
+  const app = await launch(userData);
   try {
     const page = await app.firstWindow();
     await expect(page.locator("#fixture")).toBeVisible();
@@ -53,17 +64,22 @@ test("keeps the window on the local origin when an external link is clicked", as
     expect(page.url()).toBe(before);
   } finally {
     await app.close();
+    rmSync(userData, { recursive: true, force: true });
   }
 });
 
 test("exits a second instance instead of starting another server", async () => {
-  const app = await launch();
+  const userData = createUserData();
+  const app = await launch(userData);
   try {
     const page = await app.firstWindow();
     await expect(page.locator("#fixture")).toBeVisible();
 
     const electronPath = require("electron") as string;
-    const second = spawn(electronPath, [root], { env: launchEnv(), stdio: "ignore" });
+    const second = spawn(electronPath, launchArgs(userData), {
+      env: launchEnv(),
+      stdio: "ignore",
+    });
     const exitCode = await new Promise<number | null>((resolve) => {
       const timer = setTimeout(() => {
         second.kill();
@@ -79,16 +95,18 @@ test("exits a second instance instead of starting another server", async () => {
     expect(await page.title()).toBe("Fake Scotty");
   } finally {
     await app.close();
+    rmSync(userData, { recursive: true, force: true });
   }
 });
 
 test("injects skin.css when it has content", async () => {
-  const dir = mkdtempSync(path.join(os.tmpdir(), "scotty-skin-"));
-  const skin = path.join(dir, "skin.css");
+  const userData = createUserData();
+  const skinDir = mkdtempSync(path.join(os.tmpdir(), "scotty-skin-"));
+  const skin = path.join(skinDir, "skin.css");
   writeFileSync(skin, "body { background-color: rgb(1, 2, 3); }\n");
 
   const app = await electron.launch({
-    args: [root],
+    args: launchArgs(userData),
     env: launchEnv({ SCOTTY_SKIN_PATH: skin }),
   });
   try {
@@ -98,6 +116,7 @@ test("injects skin.css when it has content", async () => {
       .toBe("rgb(1, 2, 3)");
   } finally {
     await app.close();
-    rmSync(dir, { recursive: true, force: true });
+    rmSync(userData, { recursive: true, force: true });
+    rmSync(skinDir, { recursive: true, force: true });
   }
 });

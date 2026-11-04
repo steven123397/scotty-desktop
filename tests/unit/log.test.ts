@@ -56,6 +56,20 @@ describe("createLogger", () => {
     expect(readFileSync(file, "utf8")).toContain("after rotation");
   });
 
+  it("keeps only two log files across repeated rotations", () => {
+    const file = path.join(tempDir(), "server.log");
+    const logger = createLogger(file, 30);
+
+    logger.info("one");
+    logger.info("two");
+    logger.info("three");
+
+    expect(existsSync(`${file}.1`)).toBe(true);
+    expect(existsSync(`${file}.2`)).toBe(false);
+    expect(readFileSync(`${file}.1`, "utf8")).toContain("two");
+    expect(readFileSync(file, "utf8")).toContain("three");
+  });
+
   it("keeps a single file while below the size limit", () => {
     const file = path.join(tempDir(), "server.log");
     const logger = createLogger(file, 1024);
