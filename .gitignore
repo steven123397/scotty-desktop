@@ -5,3 +5,13 @@
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+
+# Project dependencies and generated output (SPEC.md)
+node_modules/
+.cache/
+build/server/
+dist-electron/
+release/
+test-results/
+playwright-report/
+*.log
