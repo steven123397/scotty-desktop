@@ -15,3 +15,6 @@ release/
 test-results/
 playwright-report/
 *.log
+
+# Full upstream checkout, created only when syncing upstream updates
+.upstream/

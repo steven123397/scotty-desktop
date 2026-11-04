@@ -70,6 +70,9 @@
 上游固定在 `upstream.json` 的 tag + commit；构建时浅克隆并校验 SHA，不一致直接失败。
 本地补丁放在 `patches/`（按文件名顺序应用），视觉覆盖放在 `assets/skin.css`。
 
+需要同步上游新版本时，在仓库根创建 `.upstream/`（完整 clone，已 gitignore）用于比较和合并；
+日常构建仍只使用 `.cache/upstream/<tag>`。
+
 代理：本机无法直连 GitHub，需要外网时在命令前加
 `HTTP_PROXY=http://127.0.0.1:7897 HTTPS_PROXY=http://127.0.0.1:7897`；
 Electron 二进制安装另外需要 `ELECTRON_GET_USE_PROXY=true`。
