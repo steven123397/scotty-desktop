@@ -1,4 +1,5 @@
-import { appendFileSync, existsSync, renameSync, rmSync, statSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, renameSync, rmSync, statSync } from "node:fs";
+import path from "node:path";
 
 export const DEFAULT_MAX_BYTES = 5 * 1024 * 1024;
 
@@ -11,6 +12,8 @@ export interface Logger {
 
 /** Creates a line-oriented log writer that rotates to `<file>.1` at the size limit. */
 export function createLogger(file: string, maxBytes = DEFAULT_MAX_BYTES): Logger {
+  mkdirSync(path.dirname(file), { recursive: true });
+
   const append = (text: string): void => {
     rotateIfNeeded(file, maxBytes);
     appendFileSync(file, text);

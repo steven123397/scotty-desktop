@@ -33,6 +33,15 @@ describe("createLogger", () => {
     expect(log).toMatch(/ ERROR something broke$/m);
   });
 
+  it("creates the parent directory when it does not exist", () => {
+    const file = path.join(tempDir(), "nested", "logs", "server.log");
+    const logger = createLogger(file);
+
+    logger.info("hello");
+
+    expect(readFileSync(file, "utf8")).toContain("hello");
+  });
+
   it("rotates the log once it reaches the size limit", () => {
     const file = path.join(tempDir(), "server.log");
     writeFileSync(file, "x".repeat(20));

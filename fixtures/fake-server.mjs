@@ -4,9 +4,27 @@ const status = Number(process.env.FAKE_STATUS ?? "200");
 const port = Number(process.env.PORT ?? "0");
 const host = process.env.HOSTNAME ?? "127.0.0.1";
 
+const page = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fake Scotty</title>
+  </head>
+  <body>
+    <h1 id="fixture">fake scotty server</h1>
+    <a id="external" href="https://example.com/">external</a>
+  </body>
+</html>
+`;
+
 const server = http.createServer((request, response) => {
-  response.writeHead(request.url === "/" ? status : 404, { "content-type": "text/plain" });
-  response.end("ok");
+  if (request.url === "/") {
+    response.writeHead(status, { "content-type": "text/html; charset=utf-8" });
+    response.end(page);
+    return;
+  }
+  response.writeHead(404, { "content-type": "text/plain" });
+  response.end("not found");
 });
 
 server.listen(port, host, () => {

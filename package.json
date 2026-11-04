@@ -20,7 +20,7 @@
     "dist": "npm run build:main && electron-builder",
     "release": "npm run build:main && electron-builder --publish always",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run build:main && playwright test",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
