@@ -59,7 +59,11 @@ async function bootstrap(): Promise<void> {
 
   const port = await pickPort();
   const bdPath = resolveBd();
-  logger.info(`bd: ${bdPath ?? "not found (demo mode)"}`);
+  if (bdPath === null) {
+    logger.warn(`bd not found on PATH; running in demo mode`);
+  } else {
+    logger.info(`bd: ${bdPath}`);
+  }
 
   serverHandle = await startServer({ serverPath, port, bdPath, logger });
   mainWindow = createMainWindow(port, { skinCssFile });

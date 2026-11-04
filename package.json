@@ -21,6 +21,7 @@
     "release": "npm run build:main && electron-builder --publish always",
     "test": "vitest run",
     "test:e2e": "npm run build:main && playwright test",
+    "e2e:real": "npm run build:main && node scripts/e2e-real.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",

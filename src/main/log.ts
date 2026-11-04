@@ -6,6 +6,7 @@ export const DEFAULT_MAX_BYTES = 5 * 1024 * 1024;
 export interface Logger {
   readonly file: string;
   info(message: string): void;
+  warn(message: string): void;
   error(message: string): void;
   raw(chunk: string): void;
 }
@@ -22,6 +23,7 @@ export function createLogger(file: string, maxBytes = DEFAULT_MAX_BYTES): Logger
   return {
     file,
     info: (message) => append(`${new Date().toISOString()} INFO ${message}\n`),
+    warn: (message) => append(`${new Date().toISOString()} WARN ${message}\n`),
     error: (message) => append(`${new Date().toISOString()} ERROR ${message}\n`),
     raw: (chunk) => append(chunk),
   };

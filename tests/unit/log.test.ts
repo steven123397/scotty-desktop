@@ -26,10 +26,12 @@ describe("createLogger", () => {
     const logger = createLogger(file);
 
     logger.info("starting server");
+    logger.warn("bd not found");
     logger.error("something broke");
 
     const log = readFileSync(file, "utf8");
     expect(log).toMatch(/^\d{4}-\d{2}-\d{2}T[^\s]+ INFO starting server$/m);
+    expect(log).toMatch(/ WARN bd not found$/m);
     expect(log).toMatch(/ ERROR something broke$/m);
   });
 
