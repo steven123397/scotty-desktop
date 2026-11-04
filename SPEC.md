@@ -26,7 +26,7 @@
 | 桌面壳 | Electron 43.3.0 | 自带 Node 24.18.1，打包后无需系统 Node；满足 Next 16 要求 |
 | 壳内运行时 | Electron 自带 Node（`ELECTRON_RUN_AS_NODE=1`） | 直接跑 Next standalone `server.js`，不额外带 `node.exe` |
 | 上游应用 | bead-me-up-scotty `v0.4.0`（Next.js 16.4.1） | 构建时从 GitHub 拉固定 tag，见 `upstream.json` |
-| 打包 | electron-builder 26.x + NSIS | 按用户安装，免管理员 |
+| 打包 | electron-builder 26.x + NSIS（assisted） | 按用户安装，可选安装目录，免管理员 |
 | 更新 | electron-updater 6.x + GitHub Releases | 产物为 `latest.yml`（不是 Tauri 的 `latest.json`） |
 | 语言 | TypeScript 5.9（strict） | 主进程源码；esbuild 打包为 CJS |
 | 测试 | Vitest + Playwright（Electron） | 单测纯逻辑，E2E 启动真实 Electron |
@@ -264,6 +264,7 @@ docs/ideas/ · docs/adr/   按项目约定，首次产出时创建
 | Electron / Next 兼容 | Electron 43.3.0 自带 Node 24.18.1，满足 Next 16.4.1；首次构建再做一次真实启动验证 | Electron 官方 releases 元数据 |
 | CLI 打开项目 | 不做 | 与“消除启动摩擦”目标无关，v1 保持最小 |
 | 更新检查频率 | 启动后检查一次，运行中每 6 小时一次 | 个人使用成本可忽略；不做强制重启 |
+| 安装器形态 | assisted（`oneClick: false`），允许用户改安装目录；禁用 per-machine 与提权 | 用户要求可自选路径；默认仍按用户安装、免管理员 |
 
 ## Open Questions
 
