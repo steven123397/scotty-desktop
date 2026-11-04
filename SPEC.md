@@ -57,9 +57,10 @@
 | 完整验证 | `npm run verify` |
 | 查看任务 | `bd ready` / `bd show <id>` / `bd update <id> --claim` |
 
-代理：构建机需要访问 GitHub 与 npm 时，在命令前显式带
+代理：本机直连 GitHub 不可用。所有需要外网的命令（npm、上游克隆、Electron
+二进制下载）一律在命令前显式带
 `HTTP_PROXY=http://127.0.0.1:7897 HTTPS_PROXY=http://127.0.0.1:7897`，
-不改全局配置。
+不改全局配置；`@electron/get`（Electron 安装脚本）另需 `ELECTRON_GET_USE_PROXY=true`。
 
 ### 构建与发布链路
 
