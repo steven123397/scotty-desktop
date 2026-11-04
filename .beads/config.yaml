@@ -73,3 +73,5 @@
 
 sync:
     remote: "git+https://github.com/steven123397/scotty-desktop.git"
+
+events-journal: true
